@@ -4,10 +4,11 @@ const User = require('../../mongodb/userSchema');
 const admin_authorization = async (req, res, next) => {
     try {
         // write jwt authorization code
-        if(!req.user_details) return res.status(401).json({status: false, message: "Unauthorized operation"})
+        if(!req.user_id) return res.status(401).json({status: false, message: "Unauthorized operation"})
         
-        const user = await User.find({$or: [{user_id: req.user_details.user_id}, {email: req.user_details.email}]});
+        const user = await User.find({user_id: req.user_id});
 
+        console.log("admin_authorization", req.user_id, user);
         if(user.user_role == 'user')
         {
             return res.status(401).json({status: false, message: "Unauthorized User"});
@@ -23,10 +24,11 @@ const admin_authorization = async (req, res, next) => {
 const super_admin_authorization = async (req, res, next) => {
     try {
         // write jwt authorization code
-        if(!req.user_details) return res.status(401).json({status: false, message: "Unauthorized operation"})
+        if(!req.user_id) return res.status(401).json({status: false, message: "Unauthorized operation"})
         
-        const user = await User.find({$or: [{user_id: req.user_details.user_id}, {email: req.user_details.email}]});
-
+        const user = await User.find({user_id: req.user_id});
+        
+        console.log("super_admin_authorization", req.user_id, user);
         if(user.user_role != 'super_admin')
         {
             return res.status(401).json({status: false, message: "Unauthorized User"});
