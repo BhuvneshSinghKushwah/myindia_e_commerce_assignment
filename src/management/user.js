@@ -12,7 +12,7 @@ const User = require('../../mongodb/userSchema');
 const create_user = async (req, res) => {
     try {
         let { email, password, full_name } = req.body;
-        if(!email || typeof email != String || !password || typeof password != String|| !full_name || typeof full_name != String) return res.status(400).json({status: false, message: "please provide all details"});
+        if(!email || typeof email != "string" || !password || typeof password != "string"|| !full_name || typeof full_name != "string") return res.status(400).json({status: false, message: "please provide all details"});
         
         let emailValid = emailValidation(email);
         if(!emailValid.status) return res.status(401).json(emailValid);
@@ -33,7 +33,7 @@ const create_user = async (req, res) => {
 
         await newUser.save();
 
-        const token = jwt.sign({email, user_id}, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({user_id}, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         return res.status(200).json({status: true, message: "User Successfully Created", token: token})
     } catch (err) {
@@ -67,8 +67,8 @@ router.post('/signup', create_user);
 // Login
 router.get('/login', async (req, res) => {
     try {
-        let { Email, Password, Name } = req.body;
-        if(!Email || typeof Email != String || !Password || typeof Password != String|| !Name || typeof Name != String) return res.status(400).json({status: false, message: "please provide all details"});
+        let { Email, Password } = req.body;
+        if(!Email || typeof Email != String || !Password || typeof Password != String) return res.status(400).json({status: false, message: "Invalid Email/Password"});
         
         let emailValid = emailValidation(Email);
         if(!emailValid.status) return res.status(401).json(emailValid);

@@ -20,7 +20,7 @@ const password_validation = (password) => {
             return {status: false, message: "Password must be a string"};
         }
 
-        if (password.length !== 6) {
+        if (password.length < 6) {
             return {status: false, message: "Password must be 6 characters long"};
         }
 
